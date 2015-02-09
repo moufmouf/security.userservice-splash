@@ -45,6 +45,24 @@ class LoggedAnnotation extends AbstractFilter
 			$value = "userService"; 
 		}
 		try {
+
+			// FIXME
+			// FIXME
+			// FIXME
+			// FIXME
+			// FIXME
+			// FIXME!
+			// We must think out of the box!!!!
+			// An annotation is NOT a filter.
+			// We must split the notion of filter from the notion of annotation!!!!
+			// Filters are :
+			// Run on EACH action
+			// They have a chance to catch annotations!
+			// Annotations are simple objects coming from classes.
+			// We can use Doctrine annotations (why not!)
+			// This will make PLENTY of things WAY easier!!!
+			// THIS IS SPLASH 6!!!!
+
 			$userService = MoufManager::getMoufManager()->getInstance($value);
 		} catch (MoufInstanceNotFoundException $e) {
 			if (!empty($this->value))
@@ -66,4 +84,3 @@ class LoggedAnnotation extends AbstractFilter
 
 	}
 }
-?>
