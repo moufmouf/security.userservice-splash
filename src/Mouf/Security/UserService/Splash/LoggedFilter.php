@@ -2,6 +2,7 @@
 namespace Mouf\Security\UserService\Splash;
 
 
+use Mouf\Security\UserService\UserServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -9,30 +10,23 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class LoggedFilter implements HttpKernelInterface {
 
     /**
+     * @var HttpKernelInterface
+     */
+    private $app;
+
+    /**
      * @var UserServiceInterface
      */
     private $userService;
 
     /**
-     * @var object
-     */
-    private $controller;
-
-    /**
-     * @var string
-     */
-    private $action;
-
-    /**
+     * @param HttpKernelInterface $app
      * @param UserServiceInterface $userService
-     * @param object $controller
-     * @param string $action
      */
-    function __construct(UserServiceInterface $userService, $controller, $action)
+    function __construct(HttpKernelInterface $app, UserServiceInterface $userService)
     {
+        $this->app = $app;
         $this->userService = $userService;
-        $this->controller = $controller;
-        $this->action = $action;
     }
 
 
@@ -55,6 +49,14 @@ class LoggedFilter implements HttpKernelInterface {
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-
+        // If we are logged, all is good, let's forward the request.
+        if ($this->userService->isLogged()) {
+            return $this->app($request, $type, $catch);
+        } else {
+            // If we are not logged, let's redirect.
+            // FIXME: we should instead return a response!!!
+            $this->userService->redirectNotLogged();
+            return null;
+        }
     }
 }
