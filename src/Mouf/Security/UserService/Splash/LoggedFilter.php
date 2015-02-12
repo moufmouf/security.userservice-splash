@@ -51,7 +51,7 @@ class LoggedFilter implements HttpKernelInterface {
     {
         // If we are logged, all is good, let's forward the request.
         if ($this->userService->isLogged()) {
-            return $this->app($request, $type, $catch);
+            return $this->app->handle($request, $type, $catch);
         } else {
             // If we are not logged, let's redirect.
             // FIXME: we should instead return a response!!!
